@@ -3,26 +3,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  constructor(props) {
-    super(props); // All JS constructors should start with this call
-    this.state = {
-      value: null,
-    };
-  }
-
+  // Square is a controlled component
+  // Fully controlled by the Board component
   render() {
     return (
       <button
         className="square"
-        onClick={() => this.setState({value: 'X'})}
+        onClick={() => this.props.onClick()}
       >
-        {this.state.value}
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  // State of all squares stored in the Board
+  // component, to allow game control
   constructor(props) {
     super(props);
     this.state = {
@@ -30,8 +27,21 @@ class Board extends React.Component {
     }
   }
 
+  handleClick(i) {
+    // Use slice to create a copy of the state array
+    // Keep state values immutable
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
+  }
+
   renderSquare(i) {
-    return <Square value={this.state.squares[i]}/>;
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {
