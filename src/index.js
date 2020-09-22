@@ -27,6 +27,10 @@ class Board extends React.Component {
     // Use slice to create a copy of the state array
     // Keep state values immutable
     const squares = this.state.squares.slice();
+    // Ignore if game is won or Square is already filled
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       squares: squares,
@@ -44,7 +48,13 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: ' + (this.state.xIsNext ? 'X': 'O');
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
 
     return (
       <div>
